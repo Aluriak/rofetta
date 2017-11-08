@@ -3,4 +3,8 @@
 
 # Steps to manage this project
 
+    crenv
+    srenv
+    g init
     pip install zest.releaser[recommended]
+    # write the setup.{cfg,py}
