@@ -2,10 +2,13 @@
 
 """
 
+from rofetta.utils import output_as_tempfile
+
 
 SLF_HEADERS = {'lattice', 'objects', 'attributes', 'relation'}
 
 
+@output_as_tempfile
 def file_to_file(slffile:str, cxtfile:str):
     """Write in cxtfile in cxt format the context found in slf format in
     given slf file.
@@ -32,12 +35,3 @@ def file_to_file(slffile:str, cxtfile:str):
                         ofd.write(''.join('.' if attr == '0' else 'X' for attr in line.strip().split()) + '\n')
                 else:
                     raise ValueError("Header {} is not handled".format(header))
-
-
-
-if __name__ == '__main__':
-    file_to_file('contexts/rfc_foobar.slf', 'contexts/rfc_foobar.cxt')
-
-
-
-
