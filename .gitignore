@@ -3,3 +3,5 @@ __pycache__/
 rofetta.egg-info/
 .cache/
 .zcache/
+logs/
+*.vim
