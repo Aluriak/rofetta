@@ -1,0 +1,6 @@
+
+
+
+# Steps to manage this project
+
+    pip install zest.releaser[recommended]
