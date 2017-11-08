@@ -3,4 +3,4 @@ from setuptools   import setup, find_packages
 
 
 
-setup()
+setup(zip_safe=False)
