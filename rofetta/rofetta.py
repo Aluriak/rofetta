@@ -2,17 +2,25 @@
 
 import shutil
 from graffunc import graffunc
-from rofetta import slf_to_cxt, to_lp
+from rofetta import to_lp, autoconv
 from rofetta.utils import format_from_filename, basename_from_filename
 
 
 # NB: graffunc do not help ; its next version should benefit from this experiment
 grfc = graffunc({
-    ('slf',): {('cxt',): lambda slf: {'cxt': slf_to_cxt.file_to_file(slf)}},
-    ('cxt',): {('lp',): lambda cxt: {'lp': to_lp.convert_cxt_to_lp(cxt)}},
-    ('txt',): {('lp',): lambda txt: {'lp': to_lp.convert_txt_to_lp(txt)}},
-    ('csv',): {('lp',): lambda csv: {'lp': to_lp.convert_csv_to_lp(csv)}},
-
+    ('slf',): {
+        ('cxt',): lambda slf: {'cxt': autoconv.convert_slf_to_cxt(slf)}
+    },
+    ('cxt',): {
+        ('lp',): lambda cxt: {'lp': to_lp.convert_cxt_to_lp(cxt)},
+        ('slf',): lambda cxt: {'slf': autoconv.convert_cxt_to_slf(cxt)},
+    },
+    ('txt',): {
+        ('lp',): lambda txt: {'lp': to_lp.convert_txt_to_lp(txt)}
+    },
+    ('csv',): {
+        ('lp',): lambda csv: {'lp': to_lp.convert_csv_to_lp(csv)}
+    },
 })
 
 
