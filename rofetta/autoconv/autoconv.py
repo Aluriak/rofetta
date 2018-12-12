@@ -56,7 +56,7 @@ def convert(infile:str, outfile:str):
     "Call the converter to convert data in infile into outfile"
     reader = format_from_filename(infile)
     writer = format_from_filename(outfile)
-    print(reader, writer, tuple(converters.keys()))
+    # print(reader, writer, tuple(converters.keys()))
     if (reader, writer) not in converters:
         raise ValueError(f"Does not have converter to go from {reader} to {writer}.")
     return converters[reader, writer](infile, outfile)

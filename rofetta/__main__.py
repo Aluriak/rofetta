@@ -50,5 +50,5 @@ def writable_file(filepath:str) -> str:
 
 if __name__ == "__main__":
     args = parse_args()
-    print(args)
+    # print(args)
     convert(args.infile, args.outfile)

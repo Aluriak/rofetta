@@ -140,7 +140,6 @@ def read_csv(lines:iter):
     header = next(reader)
     attributes = header[1:]
     while attributes[-1] == '':  attributes = attributes[:-1]
-    print('READCSV ATTRIBUTES:', len(attributes), attributes)
     objects = tuple(l for l in reader if l)
     yield len(objects)
     yield len(attributes)
@@ -148,7 +147,6 @@ def read_csv(lines:iter):
     yield attributes
     for name, *marks in objects:
         marks = tuple(mark not in {' ', ''} for _, mark in zip(attributes, marks))
-        print('READCSV MARK:', marks)
         yield name, marks
 
 
@@ -168,12 +166,8 @@ def write_csv(reader:callable) -> iter:
     attributes = next(reader)
     assert nb_obj == len(objects)
     assert nb_att == len(attributes)
-    print('WRITECSV OBJ:', objects)
-    print('WRITECSV ATT:', attributes)
     yield ',' + ','.join(attributes)
     for object, holds in reader:
-        print(holds)
-        print(attributes)
         assert len(holds) == len(attributes)
         yield object + ',' + ','.join('X' if hold else '' for hold in holds)
 
