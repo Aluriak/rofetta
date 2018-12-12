@@ -25,3 +25,28 @@ def output_as_tempfile(func):
         func(fin, fout)
         return fout
     return wrapper
+
+
+def as_asp_value(value:str) -> str:
+    """Return given value ready to be integrated into ASP data.
+
+    >>> as_asp_value('ab')
+    'ab'
+    >>> as_asp_value('a,b')
+    '"a,b"'
+    >>> as_asp_value('a b')
+    '"a b"'
+    >>> as_asp_value('0')
+    '0'
+    >>> as_asp_value('0a')
+    '"0a"'
+    >>> as_asp_value('aɨb')
+    '"aɨb"'
+
+    """
+
+    correct_asp = value.isnumeric() or (value.isidentifier() and value[0].islower())
+    utf8 = any(ord(c) > ord('z') for c in value)
+    if correct_asp and not utf8:
+        return value
+    return '"' + value + '"'

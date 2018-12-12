@@ -6,7 +6,7 @@ import csv
 import shutil
 import tempfile
 import itertools
-import core
+# import core
 
 
 def format_from_filename(fname:str) -> str or None:

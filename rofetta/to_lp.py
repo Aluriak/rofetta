@@ -2,7 +2,7 @@
 
 import csv
 import itertools
-from rofetta.utils import output_as_tempfile
+from rofetta.utils import output_as_tempfile, as_asp_value
 
 
 @output_as_tempfile
