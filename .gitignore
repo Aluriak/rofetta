@@ -1,7 +1,10 @@
-venv/
-__pycache__/
-rofetta.egg-info/
-.cache/
-.zcache/
-logs/
 *.vim
+.cache/
+.pytest_cache/
+.zcache/
+__pycache__/
+build/
+dist/
+logs/
+rofetta.egg-info/
+venv/

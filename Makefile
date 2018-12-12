@@ -5,6 +5,10 @@ all:
 
 t: tests
 tests:
-	pytest test/
+	pytest test/ rofetta -vv --doctest-module --ignore=venv
 
-.PHONY: tests t all
+.PHONY: tests t all install_deps
+
+
+install_deps:
+	python -c "import configparser; c = configparser.ConfigParser(); c.read('setup.cfg'); print(c['options']['install_requires'])" | xargs pip install -U

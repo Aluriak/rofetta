@@ -26,3 +26,6 @@ reactant("d","R3").
 product("b","R1").
 product("e","R3").
 dreaction("R3").
+
+% define the relations between reactants and products of same reaction.
+rel(R,P):- reactant(R,F) ; product(F,P).
