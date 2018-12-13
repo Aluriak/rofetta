@@ -226,3 +226,54 @@ def write_lp(reader:callable) -> iter:
         for attr, hold in zip(attributes, holds):
             if hold:
                 yield f'rel({as_asp_value(object)},{as_asp_value(attr)}).'
+
+
+def read_lmb(lines:iter):
+    """Yield, in that order:
+
+    - number of objects
+    - number of attributes
+    - tuple of objects
+    - tuple of attributes
+    - for each object:
+        - (object, bools)
+
+    """
+    assert next(lines) == 'LM_BINARY_CONTEXT\n'
+    objects_line = next(lines)
+    objects = objects_line.split('|')
+    assert objects[0] == ''
+    objects = tuple(map(str.strip, objects[1:]))
+    attributes_line = next(lines)
+    attributes = attributes_line.split('|')
+    assert attributes[0] == ''
+    attributes = tuple(map(str.strip, attributes[1:]))
+    yield len(objects)
+    yield len(attributes)
+    yield objects
+    yield attributes
+    for object in objects:
+        marks = next(lines).split()
+        assert len(marks) == len(attributes)
+        yield object, tuple(int(mark) != 0 for mark in marks)
+
+
+def write_lmb(reader:callable) -> iter:
+    """Yield binary lmb lines knowing that reader will provide, in that order:
+
+    - number of objects
+    - number of attributes
+    - tuple of objects
+    - tuple of attributes
+    - for each object:
+        - booleans relations
+
+    """
+    yield 'LM_BINARY_CONTEXT'
+    nb_obj, nb_att = next(reader), next(reader)
+    objects = next(reader)
+    attributes = next(reader)
+    yield '| ' + ' | '.join(objects) + ' '
+    yield '| ' + ' | '.join(attributes) + ' '
+    for object, holds in reader:
+        yield ' '.join(str(int(hold)) for hold in holds) + ' '
