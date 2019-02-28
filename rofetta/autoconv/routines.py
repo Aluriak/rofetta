@@ -313,7 +313,7 @@ def write_tex(reader:callable) -> iter:
     yield r"\begin{table}"
     yield r"\begin{center}"
     yield r"\newcommand{\xx}{$\times$}"
-    yield r"\begin{tabular}{|" + 'c|'*nb_att + "|}"
+    yield r"\begin{tabular}{|c|" + 'c|'*nb_att + "}"
     yield r"    \hline"
     # content
     col_width = max(map(len, attributes)) + 1
