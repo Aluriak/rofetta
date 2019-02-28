@@ -36,10 +36,7 @@ def possible_conversions() -> [(str, str)]:
             if name.startswith('write_'):
                 writers.add(name[len('write_'):])
     for reader, writer in itertools.product(readers, writers):
-        # verify that you are not converting to self, and that you can go
-        #  back and forth (which is impossible if you have only a writer xor
-        #  a reader for a given format).
-        if reader != writer and reader in writers and writer in readers:
+        if reader != writer:
             yield reader, writer
 
 # make all possible converters
