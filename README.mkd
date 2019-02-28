@@ -5,6 +5,10 @@ Usage:
 
     python -m rofetta my-context.cxt my-converted-context.lmb
 
+Supported standard formats are: cxt, txt, lmb, csv, slf.
+
+Other formats: lp (ASP atoms), tex (latex table).
+
 
 
 ## Steps to manage this project
