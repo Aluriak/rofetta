@@ -277,3 +277,54 @@ def write_lmb(reader:callable) -> iter:
     yield '| ' + ' | '.join(attributes) + ' '
     for object, holds in reader:
         yield ' '.join(str(int(hold)) for hold in holds) + ' '
+
+
+def write_tex(reader:callable) -> iter:
+    """Yield tex lines knowing that reader will provide, in that order:
+
+    - number of objects
+    - number of attributes
+    - tuple of objects
+    - tuple of attributes
+    - for each object:
+        - booleans relations
+
+    """r"""  EXAMPLE OUTPUT:
+        \begin{table}
+        \begin{center}
+        \newcommand{\xx}{$\times$}
+        \begin{tabular}{|c|c|c|c|c|c|c|c|}
+            \hline
+                   & adult & child & female & male & boy & woman & man \\\hline
+            alice  &       &       &  \xx   &      &     &       &     \\\hline
+            bob    &  \xx  &       &        & \xx  &     &       & \xx \\\hline
+            eve    &  \xx  &       &  \xx   &      &     &  \xx  &     \\\hline
+            john   &       &  \xx  &        & \xx  & \xx &       &     \\\hline
+        \end{tabular}
+        \end{center}
+        \caption{formal context compiled by rofetta python package.}
+        \label{tab:context}
+        \end{table}
+    """
+    nb_obj, nb_att = next(reader), next(reader)
+    objects = next(reader)
+    attributes = next(reader)
+    # beginners
+    yield r"\begin{table}"
+    yield r"\begin{center}"
+    yield r"\newcommand{\xx}{$\times$}"
+    yield r"\begin{tabular}{|" + 'c|'*nb_att + "|}"
+    yield r"    \hline"
+    # content
+    col_width = max(map(len, attributes)) + 1
+    first_col_width = max(map(len, objects)) + 1
+    yield ' ' * first_col_width + '&' + '&'.join(col.center(col_width) for col in attributes) + r"\\\hline"
+    for obj, holds in reader:
+        line = ((r'\xx' if hold else '').center(col_width) for col, hold in zip(attributes, holds))
+        yield obj.ljust(first_col_width) + '&' + '&'.join(line) + r"\\\hline"
+    # enders
+    yield r"\end{tabular}"
+    yield r"\end{center}"
+    yield r"\caption{formal context compiled by rofetta python package.}"
+    yield r"\label{tab:context}"
+    yield r"\end{table}"
