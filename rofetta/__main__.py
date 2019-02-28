@@ -6,6 +6,7 @@
 import os
 import argparse
 from rofetta import convert
+from rofetta import __version__
 
 
 def parse_args(args:iter=None) -> dict:
@@ -17,6 +18,8 @@ def cli_parser() -> argparse.ArgumentParser:
 
     # main parser
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--version', '-v', action='version',
+                        version="%(prog)s " + __version__)
 
 
     parser.add_argument('infile', type=existant_file,
