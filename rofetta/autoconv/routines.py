@@ -240,21 +240,19 @@ def read_lp(lines:iter):
     """
     lines = '\n'.join(lines)
     objects, attributes, relations = set(), set(), {}
-    for answer in clyngor.solve(inline=lines).by_predicate.careful_parsing.int_not_parsed:
-        for args in answer.get('rel', ()):
-            if len(args) == 2:
-                obj, att = args
-                obj = obj[1:-1] if obj[0] == obj[-1] == '"' else obj
-                att = att[1:-1] if att[0] == att[-1] == '"' else att
-                objects.add(obj)
-                attributes.add(att)
-                relations.setdefault(obj, set()).add(att)
+    for answer in clyngor.solve(inline=lines).by_arity.careful_parsing.int_not_parsed:
+        for obj, att in answer.get('rel/2', ()):
+            obj = obj[1:-1] if obj[0] == obj[-1] == '"' else obj
+            att = att[1:-1] if att[0] == att[-1] == '"' else att
+            objects.add(obj)
+            attributes.add(att)
+            relations.setdefault(obj, set()).add(att)
     objects = tuple(sorted(tuple(objects)))
     attributes = tuple(sorted(tuple(attributes)))
     yield len(objects)
     yield len(attributes)
-    yield objects
-    yield attributes
+    yield tuple(objects)
+    yield tuple(attributes)
     for object in objects:
         hold = relations[object]
         yield object, tuple(attr in hold for attr in attributes)
