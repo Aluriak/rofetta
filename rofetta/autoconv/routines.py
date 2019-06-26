@@ -40,7 +40,7 @@ def read_cxt(lines:iter):
     yield attributes
     for object, properties in zip(objects, lines):
         properties = properties.strip()  # remove the line terminator
-        assert len(properties) == len(attributes)
+        assert len(properties) == len(attributes), (properties, attributes)
         yield object, tuple(char.lower() == 'x' for char in properties)
 
 
@@ -65,6 +65,61 @@ def write_cxt(reader:callable) -> iter:
         yield str(attribute)
     for _, props in reader:
         yield ''.join('X' if hold else '.' for hold in props)
+
+
+def read_txt(lines:iter):
+    """Yield, in that order:
+
+    - number of objects
+    - number of attributes
+    - tuple of objects
+    - tuple of attributes
+    - for each object:
+        - (object, bools)
+
+    """
+    headline = next(lines)
+    attributes = tuple(map(str.strip, headline.split('|')))
+    assert not attributes[0]
+    attributes = tuple(elem for elem in attributes[1:] if elem)
+
+    objects = {}  # object: tuple of bool
+    for line in lines:
+        if not line.strip(): continue
+        obj, *relations = tuple(map(str.strip, line.split('|')))
+        assert obj not in objects
+        objects[obj] = tuple(relation.upper() == 'X' for attr, relation in zip(attributes, relations))  # NOTE: zip is here to avoid sending a supplementary relation due to trailing pipe
+
+    yield len(objects)
+    yield len(attributes)
+    yield tuple(objects)
+    yield tuple(attributes)
+    for obj, rels in objects.items():
+        yield obj, rels
+
+
+def write_txt(reader:callable) -> iter:
+    """Yield txt lines knowing that reader will return, in that order:
+
+    - number of objects
+    - number of attributes
+    - tuple of objects
+    - tuple of attributes
+    - for each object:
+        - booleans relations
+
+    """
+    nb_obj, nb_att = next(reader), next(reader)
+    objects, attributes = next(reader), next(reader)
+    maxcol0width = max(map(len, objects))
+    # header
+    yield ' '  * maxcol0width + '|' + '|'.join(attributes) + '|'
+    # each line
+    for obj, props in reader:
+        col0 = obj.ljust(maxcol0width)+ '|'
+        cols = (('X' if hold else ' ').ljust(len(attr))
+                for attr, hold in zip(attributes, props))
+        yield col0 + '|'.join(cols) + '|'
 
 
 def read_slf(lines:str):
