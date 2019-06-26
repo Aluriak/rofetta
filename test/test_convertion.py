@@ -45,6 +45,7 @@ def template_test_convertion(filename, ext, target_ext):
 
 
 for fname in itertools.chain.from_iterable(glob.glob(f'contexts/*.{ext}') for ext in input_formats):
+    if fname[9:].startswith('_'): continue
     name = os.path.splitext(os.path.basename(fname))[0]
     ext = os.path.splitext(fname)[1].strip('.')
     if ext not in output_formats:  continue  # can't convert back to the file, so no auto verification is possible
